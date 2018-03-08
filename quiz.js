@@ -69,6 +69,7 @@ function run_quiz(data)
 function display_category(category)
 {
   $("#answer").hide("fade", {}, 500);
+  $("#questionpicture").hide("fade", {}, 500);
   $("#question").hide("fade", {}, 500, function() {
         $("#category").text(category.name);
         $("#category").show("fade", {}, 500);
@@ -79,10 +80,19 @@ function display_question(question)
 {
   $("#category").hide("fade", {}, 500, function () {
     $("#answer").hide("fade", {}, 500);
+    $("#questionpicture").hide("fade", {}, 500);
     $("#question").hide("fade", {}, 500, function() {
-      $("#question").text(question.question);
       $("#answer").text(question.answer);
-      $("#question").show("fade", {}, 500);
+      if ("question" in question)
+      {
+        $("#question").html(question.question);
+        $("#question").show("fade", {}, 500);
+      }
+      if ("picture" in question)
+      {
+        $("#questionpicture").attr("src", question.picture);
+        $("#questionpicture").show("fade", {}, 500)
+      }
       if ($.QueryString.show)
       {
         $("#answer").show("fade", {}, 500);
@@ -92,6 +102,10 @@ function display_question(question)
 }
 
 $(document).ready(function() {
+  if ($.QueryString.category)
+  {
+    current_category = $.QueryString.category;
+  }
   $.getJSON("questions.json", run_quiz);
 });
 
